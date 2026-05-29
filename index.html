@@ -1,146 +1,142 @@
 <!DOCTYPE html>
+
 <html lang="ja">
 <head>
-  <meta charset="UTF-8">
-  <title>ファイル利用に関する同意</title>
-  <style>
-    body {
-      font-family: sans-serif;
-      max-width: 760px;
-      margin: 48px auto;
-      padding: 0 20px;
-      line-height: 1.8;
-      color: #222;
-    }
+<meta charset="UTF-8">
+<title>ファイル利用に関する同意</title>
 
-    .box {
-      border: 1px solid #d0d7de;
-      padding: 28px;
-      border-radius: 10px;
-      background: #fff;
-    }
+<style>
+body{
+    font-family: sans-serif;
+    max-width: 800px;
+    margin: 40px auto;
+    padding: 20px;
+    line-height: 1.8;
+}
 
-    h1 {
-      font-size: 24px;
-      margin-top: 0;
-    }
+.container{
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    padding: 24px;
+}
 
-    .filename {
-      padding: 12px;
-      background: #f6f8fa;
-      border-radius: 6px;
-      word-break: break-all;
-      margin-bottom: 20px;
-    }
+.notice{
+    background: #fff8e1;
+    border-left: 4px solid #ff9800;
+    padding: 12px;
+    margin: 20px 0;
+}
 
-    .notice {
-      border-left: 4px solid #d1242f;
-      padding-left: 14px;
-      margin: 20px 0;
-      font-weight: bold;
-    }
+button{
+    background: #0078d4;
+    color: white;
+    border: none;
+    padding: 12px 24px;
+    border-radius: 6px;
+    cursor: pointer;
+}
 
-    label {
-      display: block;
-      margin-top: 24px;
-      font-size: 16px;
-    }
+button:disabled{
+    background: #999;
+    cursor: not-allowed;
+}
+</style>
 
-    button {
-      margin-top: 24px;
-      padding: 12px 24px;
-      font-size: 16px;
-      border: none;
-      border-radius: 6px;
-      background: #0078d4;
-      color: white;
-      cursor: pointer;
-    }
-
-    button:disabled {
-      background: #aaa;
-      cursor: not-allowed;
-    }
-
-    .error {
-      color: #d1242f;
-      margin-top: 16px;
-      display: none;
-    }
-  </style>
 </head>
 <body>
-  <div class="box">
-    <h1>ファイル利用に関する同意</h1>
 
-    <div class="filename" id="fileNameArea">
-      対象ファイルを確認中...
-    </div>
+<div class="container">
 
-    <p>
-      このファイルには、社内または関係者向けの情報が含まれている可能性があります。
-      ファイルを開く前に、以下の内容を確認してください。
-    </p>
+<h2>ファイル利用に関する同意</h2>
 
-    <div class="notice">
-      このファイルの内容を、ChatGPT、Copilot、Gemini、Claude等の生成AIサービスへ投入しないでください。
-    </div>
+<p id="fileName">
+対象ファイルを確認中...
+</p>
 
-    <ul>
-      <li>生成AIサービスへ入力しない</li>
-      <li>社外へ無断共有しない</li>
-      <li>無断転載しない</li>
-      <li>二次配布しない</li>
-      <li>業務目的以外で利用しない</li>
-    </ul>
+<div class="notice">
+本資料の内容を ChatGPT、Copilot、Gemini、Claude 等の生成AIサービスへ入力することを禁止します。
+</div>
 
-    <label>
-      <input type="checkbox" id="agreeCheck">
-      上記内容に同意します
-    </label>
+<ul>
+<li>生成AIサービスへ入力しない</li>
+<li>社外へ無断共有しない</li>
+<li>無断転載しない</li>
+<li>二次配布しない</li>
+<li>業務目的以外で利用しない</li>
+</ul>
 
-    <button id="openButton" disabled>
-      同意してファイルを開く
-    </button>
+<label>
+<input type="checkbox" id="agree">
+上記内容に同意します
+</label>
 
-    <div class="error" id="errorMessage">
-      ファイル情報を取得できませんでした。SharePointのリンク設定を確認してください。
-    </div>
-  </div>
+<br><br>
 
-  <script>
-    const params = new URLSearchParams(window.location.search);
+<button id="openBtn" disabled>
+同意してファイルを開く
+</button>
 
-    const fileName = params.get("fileName") || "対象ファイル";
-    const filePath = params.get("filePath");
+</div>
 
-    const fileUrl = filePath
-      ? "https://exmotionms.sharepoint.com" + filePath
-      : "";
+<script>
 
-    const fileNameArea = document.getElementById("fileNameArea");
-    const agreeCheck = document.getElementById("agreeCheck");
-    const openButton = document.getElementById("openButton");
-    const errorMessage = document.getElementById("errorMessage");
+// ===== ファイル一覧 =====
 
-    fileNameArea.textContent = "対象ファイル：" + fileName;
+const files = {
 
-    if (!fileUrl) {
-      errorMessage.style.display = "block";
+  "1": {
+    name: "要件定義実践トレーニング_テキスト.pdf",
+    url: "https://exmotionms.sharepoint.com/:b:/s/EurekaBox/IQBttbCIzcwmSIdFRQLI5nOKAbDBE81Hg7UyiyxCtxh8_BE?e=knzLrz"
+//  },
+//
+//  "2": {
+//    name: "技術資料.pdf",
+//    url: "ここにSharePoint共有リンク②"
+  }
+
+};
+
+// ======================
+
+const params = new URLSearchParams(window.location.search);
+
+const id = params.get("id");
+
+const file = files[id];
+
+const fileName = document.getElementById("fileName");
+const agree = document.getElementById("agree");
+const openBtn = document.getElementById("openBtn");
+
+if(file){
+
+    fileName.textContent =
+      "対象ファイル: " + file.name;
+
+}else{
+
+    fileName.innerHTML =
+      "<span style='color:red'>対象ファイルが見つかりません</span>";
+
+}
+
+agree.addEventListener("change", () => {
+
+    openBtn.disabled = !agree.checked;
+
+});
+
+openBtn.addEventListener("click", () => {
+
+    if(!file){
+        return;
     }
 
-    agreeCheck.addEventListener("change", function () {
-      openButton.disabled = !agreeCheck.checked;
-    });
+    window.open(file.url, "_blank");
 
-    openButton.addEventListener("click", function () {
-      if (!fileUrl) {
-        errorMessage.style.display = "block";
-        return;
-      }
+});
 
-      window.open(fileUrl, "_blank", "noopener");
-    });
-  </script>
+</script>
+
 </body>
 </html>
